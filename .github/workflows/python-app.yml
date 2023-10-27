@@ -36,4 +36,15 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        pytest
+       pip install pytest
+       export PYTHONPATH=src
+       pytest
+    - name: Deploy to Heroku
+      env:
+          HEROKU_API_TOKEN: 3004c3c7-115e-45ea-8f22-f5bc7275556a
+          HEROKU_APP_NAME: pacific-sands-46935
+      if: github.ref == 'refs/heads/main' && job.status == 'success'
+      run: |
+          git remote add heroku https://heroku:3004c3c7-115e-45ea-8f22-f5bc7275556a@git.heroku.com/pacific-sands-46935.git
+          git push heroku HEAD:main -f
+
